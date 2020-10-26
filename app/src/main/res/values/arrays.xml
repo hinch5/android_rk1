@@ -1,0 +1,11 @@
+<resources>
+    <string-array name="currency_entries">
+        <item>USD</item>
+        <item>RUB</item>
+    </string-array>
+
+    <string-array name="currency_values">
+        <item>usd</item>
+        <item>rub</item>
+    </string-array>
+</resources>

@@ -1,0 +1,18 @@
+<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <PreferenceCategory app:title="@string/price_parameters">
+        <ListPreference
+            app:defaultValue="usd"
+            app:key="fiat_currency"
+            app:entries="@array/currency_entries"
+            app:entryValues="@array/currency_values"
+            app:title="@string/fiat_currency"
+            app:useSimpleSummaryProvider="true" />
+        <EditTextPreference
+            app:key="trading_day"
+            app:title="@string/trading_day"
+            app:defaultValue="26.10.2020"
+            app:useSimpleSummaryProvider="true"
+            />
+    </PreferenceCategory>
+</PreferenceScreen>
