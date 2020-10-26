@@ -24,5 +24,10 @@
         android:id="@+id/detailsFragment"
         android:name="com.bmstu.shatnyuk.androidrk1.DetailsFragment"
         android:label="fragment_details"
-        tools:layout="@layout/fragment_details"/>
+        tools:layout="@layout/fragment_details">
+        <argument
+            android:name="data"
+            app:argType="<MarketDate>"
+            android:defaultValue="@null"/>
+    </fragment>
 </navigation>

@@ -1,5 +1,9 @@
 package com.bmstu.shatnyuk.androidrk1.model
 
+import android.os.Parcelable
+import kotlinx.android.parcel.Parcelize
+
+@Parcelize
 class MarketData(
     val baseAsset: String,
     val quoteAsset: String,
@@ -12,4 +16,4 @@ class MarketData(
     val closeTime: Long,
     val quoteVolume: String,
     val numberOfTrades: Long
-)
+) : Parcelable
