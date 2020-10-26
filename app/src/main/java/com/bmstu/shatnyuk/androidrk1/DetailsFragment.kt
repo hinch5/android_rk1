@@ -34,11 +34,11 @@ class DetailsFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         _binding = FragmentDetailsBinding.inflate(inflater, container, false)
-        binding.baseAssetDetail.text = data.baseAsset
-        binding.quoteAssetDetail.text = data.quoteAsset
-        binding.dateDetail.text = Date(data.closeTime).toString()
-        binding.priceDetail.text = data.closePrice
-        binding.volumeDetail.text = data.volume
+        binding.baseAssetDetail.text = resources.getString(R.string.base_asset, data.baseAsset)
+        binding.quoteAssetDetail.text = resources.getString(R.string.quote_asset, data.quoteAsset)
+        binding.dateDetail.text = resources.getString(R.string.date, Date(data.closeTime).toString())
+        binding.priceDetail.text = resources.getString(R.string.price, data.closePrice)
+        binding.volumeDetail.text = resources.getString(R.string.volume, data.volume)
         return binding.root
     }
 

@@ -9,4 +9,9 @@
     <string name="navigation">Navigation</string>
     <string name="days_qty">Days Qty</string>
     <string name="details">Details</string>
+    <string name="base_asset">Base Asset: %1$s</string>
+    <string name="quote_asset">Quote Asset: %1$s</string>
+    <string name="date">Date: %1$s</string>
+    <string name="price">Close Price: %1$s</string>
+    <string name="volume">Trading View: %1$s</string>
 </resources>
