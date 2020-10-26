@@ -72,7 +72,7 @@ class MainActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         val itemId = item.itemId
         if (itemId == R.id.action_refresh) {
-            marketDataListViewModel.refreshMarketData("BTC", getQuote(), getDaysQty().toInt())
+            marketDataListViewModel.refreshMarketData(baseAsset, getQuote(), getDaysQty().toInt())
         } else if (itemId == R.id.action_settings) {
             val navHostFragment =
                 supportFragmentManager.findFragmentById(R.id.host_fragment) as NavHostFragment
