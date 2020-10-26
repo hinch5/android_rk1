@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.setFragmentResultListener
 import com.bmstu.shatnyuk.androidrk1.databinding.FragmentDetailsBinding
 import com.bmstu.shatnyuk.androidrk1.model.MarketData
@@ -14,6 +15,7 @@ const val ARG1 = "MARKET_DATA"
 
 class DetailsFragment : Fragment() {
     private var _binding: FragmentDetailsBinding? = null
+    private var count = 0
 
     private val binding
         get(): FragmentDetailsBinding {
@@ -24,7 +26,7 @@ class DetailsFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
-            handleData(it.getParcelable("data")!!)
+            data = it.getParcelable("data")!!
         }
     }
 
@@ -34,16 +36,25 @@ class DetailsFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         _binding = FragmentDetailsBinding.inflate(inflater, container, false)
-        binding.baseAssetDetail.text = resources.getString(R.string.base_asset, data.baseAsset)
-        binding.quoteAssetDetail.text = resources.getString(R.string.quote_asset, data.quoteAsset)
-        binding.dateDetail.text = resources.getString(R.string.date, Date(data.closeTime).toString())
-        binding.priceDetail.text = resources.getString(R.string.price, data.closePrice)
-        binding.volumeDetail.text = resources.getString(R.string.volume, data.volume)
+        handleData(data)
+        val marketDataListViewModel: MarketDataListViewModel by activityViewModels()
+        marketDataListViewModel.getMarketDataList().observe(viewLifecycleOwner, androidx.lifecycle.Observer {
+            handleData(it[0])
+        })
+
         return binding.root
     }
 
     private fun handleData(_data: MarketData) {
-        data = _data
+        if (count != 1) {
+            data = _data
+            binding.baseAssetDetail.text = resources.getString(R.string.base_asset, data.baseAsset)
+            binding.quoteAssetDetail.text = resources.getString(R.string.quote_asset, data.quoteAsset)
+            binding.dateDetail.text = resources.getString(R.string.date, Date(data.closeTime).toString())
+            binding.priceDetail.text = resources.getString(R.string.price, data.closePrice)
+            binding.volumeDetail.text = resources.getString(R.string.volume, data.volume)
+        }
+        count++
     }
 
     companion object {

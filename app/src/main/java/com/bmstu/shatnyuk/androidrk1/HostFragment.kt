@@ -6,12 +6,12 @@ import android.net.Uri
 import android.os.Bundle
 import android.text.SpannableString
 import android.text.style.UnderlineSpan
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.os.bundleOf
-import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.setFragmentResult
@@ -34,7 +34,7 @@ class HostFragment : Fragment() {
     private lateinit var recyclerView: RecyclerView
     private lateinit var viewAdapter: RecyclerView.Adapter<*>
     private lateinit var viewManager: RecyclerView.LayoutManager
-    private lateinit var baseAsset: String
+    private var baseAsset: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -54,7 +54,10 @@ class HostFragment : Fragment() {
         val marketDataListViewModel: MarketDataListViewModel by activityViewModels()
         marketDataListViewModel.getMarketDataList()
             .observe(viewLifecycleOwner, Observer { marketDataList ->
-                setLink(baseAsset, getQuote())
+                Log.i("GOT", "INFO")
+                if (baseAsset != null) {
+                    setLink(baseAsset!!, getQuote())
+                }
                 viewManager = LinearLayoutManager(context)
                 viewAdapter = MarketDataAdapter(
                     marketDataList,
@@ -71,13 +74,13 @@ class HostFragment : Fragment() {
                     layoutManager = viewManager
                     adapter = viewAdapter
                 }
-                sendRefreshedData(marketDataList[0])
             })
         val baseQuoteViewModel: BaseQuoteViewModel by activityViewModels()
         val liveBaseAsset = baseQuoteViewModel.getBaseAsset()
         liveBaseAsset.observe(viewLifecycleOwner, object : Observer<String> {
             override fun onChanged(asset: String) {
                 baseAsset = asset
+                setLink(baseAsset!!, getQuote())
                 binding.baseAssetInput.setText(asset)
                 liveBaseAsset.removeObserver(this)
             }
@@ -91,7 +94,7 @@ class HostFragment : Fragment() {
             ) {
 
                 baseQuoteViewModel.baseAssetInput(
-                    baseAsset
+                    baseAsset!!
                 )
             } else {
                 Toast.makeText(
@@ -101,10 +104,6 @@ class HostFragment : Fragment() {
                 ).show()
             }
         }
-    }
-
-    fun sendRefreshedData(data: MarketData) {
-        setFragmentResult(ARG1, bundleOf("data" to data))
     }
 
     private fun setLink(baseAsset: String, quoteAsset: String) {
