@@ -5,6 +5,8 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bmstu.shatnyuk.androidrk1.databinding.FragmentHostBinding
@@ -31,14 +33,16 @@ class HostFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         _binding = FragmentHostBinding.inflate(inflater, container, false)
-        val marketDataList = loadMarketData("BTC", "USDT", 100)
-        viewManager = LinearLayoutManager(context)
-        viewAdapter = MarketDataAdapter(marketDataList)
-        recyclerView = binding.marketDataRecyclerView.apply {
-            setHasFixedSize(true)
-            layoutManager = viewManager
-            adapter = viewAdapter
-        }
+        val model: MarketDataListViewModel by viewModels()
+        model.getMarketDataList().observe(viewLifecycleOwner, Observer { marketDataList ->
+            viewManager = LinearLayoutManager(context)
+            viewAdapter = MarketDataAdapter(marketDataList)
+            recyclerView = binding.marketDataRecyclerView.apply {
+                setHasFixedSize(true)
+                layoutManager = viewManager
+                adapter = viewAdapter
+            }
+        })
         return binding.root
 
     }
