@@ -2,21 +2,20 @@ package com.bmstu.shatnyuk.androidrk1
 
 import android.content.SharedPreferences
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
 import androidx.core.os.bundleOf
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.setFragmentResult
+import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.preference.PreferenceManager
-import com.bmstu.shatnyuk.androidrk1.model.MarketData
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bmstu.shatnyuk.androidrk1.databinding.FragmentHostBinding
-import java.lang.Exception
+import com.bmstu.shatnyuk.androidrk1.model.MarketData
 
 class HostFragment : Fragment() {
     private var _binding: FragmentHostBinding? = null
@@ -39,10 +38,24 @@ class HostFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         _binding = FragmentHostBinding.inflate(inflater, container, false)
-        val model: MarketDataListViewModel by viewModels()
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        val model: MarketDataListViewModel by activityViewModels()
         model.getMarketDataList().observe(viewLifecycleOwner, Observer { marketDataList ->
             viewManager = LinearLayoutManager(context)
-            viewAdapter = MarketDataAdapter(marketDataList)
+            viewAdapter = MarketDataAdapter(
+                marketDataList,
+                this
+            ) { hostFragment: HostFragment, marketData: MarketData ->
+                val navController = hostFragment.findNavController()
+                navController.navigate(
+                    R.id.action_hostFragment_to_detailsFragment,
+                    bundleOf("data" to marketData)
+                )
+            }
             recyclerView = binding.marketDataRecyclerView.apply {
                 setHasFixedSize(true)
                 layoutManager = viewManager
@@ -50,16 +63,6 @@ class HostFragment : Fragment() {
             }
         })
         model.refreshMarketData("BTC", "USDT", 100)
-        return binding.root
-
-    }
-
-    fun navigateToDetail(data: MarketData) {
-        val navController = this.findNavController()
-        navController.navigate(
-            R.id.action_hostFragment_to_detailsFragment,
-            bundleOf("data" to data)
-        )
     }
 
     fun sendRefreshedData(data: MarketData) {
