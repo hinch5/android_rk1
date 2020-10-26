@@ -69,19 +69,6 @@ class HostFragment : Fragment() {
         setFragmentResult(ARG1, bundleOf("data" to data))
     }
 
-    fun getQuote(): String {
-        val sharedPreferences: SharedPreferences =
-            PreferenceManager.getDefaultSharedPreferences(context)
-        return sharedPreferences.getString("fiat_currency", "")!!
-    }
-
-    fun getDaysQty(): Long {
-        val sharedPreferences: SharedPreferences =
-            PreferenceManager.getDefaultSharedPreferences(context)
-        val qty: String = sharedPreferences.getString("days_qty", "")!!
-        return qty.toLong()
-    }
-
     companion object {
         @JvmStatic
         fun newInstance() = HostFragment()

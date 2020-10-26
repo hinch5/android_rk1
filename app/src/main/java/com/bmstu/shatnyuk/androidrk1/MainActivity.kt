@@ -1,9 +1,11 @@
 package com.bmstu.shatnyuk.androidrk1
 
+import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.*
 import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI
@@ -11,12 +13,15 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
+import androidx.preference.PreferenceManager
 import com.bmstu.shatnyuk.androidrk1.databinding.ActivityMainBinding
 import java.lang.Exception
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding;
-    private lateinit var appBarConfiguration: AppBarConfiguration;
+    private lateinit var appBarConfiguration: AppBarConfiguration
+    private val model: MarketDataListViewModel by viewModels()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
@@ -30,6 +35,7 @@ class MainActivity : AppCompatActivity() {
         appBarConfiguration = AppBarConfiguration(navController.graph, binding.root)
         setupActionBarWithNavController(navController, appBarConfiguration)
         binding.navView.setupWithNavController(navController)
+        model.refreshMarketData("BTC", getQuote(), getDaysQty().toInt())
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -40,7 +46,7 @@ class MainActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         val itemId = item.itemId
         if (itemId == R.id.action_refresh) {
-            // refresh here
+            model.refreshMarketData("BTC", getQuote(), getDaysQty().toInt())
         } else if (itemId == R.id.action_settings) {
             val navHostFragment =
                 supportFragmentManager.findFragmentById(R.id.host_fragment) as NavHostFragment
@@ -55,6 +61,19 @@ class MainActivity : AppCompatActivity() {
             supportFragmentManager.findFragmentById(R.id.host_fragment) as NavHostFragment
         val navController = navHostFragment.navController
         return NavigationUI.navigateUp(navController, appBarConfiguration)
+    }
+
+    fun getQuote(): String {
+        val sharedPreferences: SharedPreferences =
+            PreferenceManager.getDefaultSharedPreferences(this)
+        return sharedPreferences.getString("fiat_currency", "USDT")!!
+    }
+
+    fun getDaysQty(): Long {
+        val sharedPreferences: SharedPreferences =
+            PreferenceManager.getDefaultSharedPreferences(this)
+        val qty: String = sharedPreferences.getString("days_qty", "100")!!
+        return qty.toLong()
     }
 
     class SettingsFragment : PreferenceFragmentCompat(), Preference.OnPreferenceChangeListener {

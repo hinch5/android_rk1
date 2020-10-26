@@ -46,6 +46,7 @@ public suspend fun loadMarketData(
             "1d",
             numberOfDays
         )
+        Log.i("load market data", "Raw history data: $historyRaw")
         return List<MarketData>(historyRaw.size) { index ->
             val historyElem = historyRaw[index]
             MarketData(
