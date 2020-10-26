@@ -77,12 +77,13 @@ class HostFragment : Fragment() {
         val liveBaseAsset = baseQuoteViewModel.getBaseAsset()
         liveBaseAsset.observe(viewLifecycleOwner, object : Observer<String> {
             override fun onChanged(asset: String) {
+                baseAsset = asset
                 binding.baseAssetInput.setText(asset)
                 liveBaseAsset.removeObserver(this)
             }
         })
-        binding.baseAssetInput.doAfterTextChanged { asset ->
-            baseAsset = asset.toString()
+        binding.baseAssetSubmit.setOnClickListener {
+            baseAsset = binding.baseAssetInput.text.toString()
             if (
                 resources
                     .getStringArray(R.array.base_currency_values)
