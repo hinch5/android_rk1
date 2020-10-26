@@ -51,11 +51,6 @@ class MainActivity : AppCompatActivity() {
                 getQuote(),
                 getDaysQty().toInt()
             )
-            Toast.makeText(
-                this,
-                "New base asset: $baseAsset",
-                Toast.LENGTH_SHORT
-            ).show()
         })
     }
 

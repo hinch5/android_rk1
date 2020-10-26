@@ -14,4 +14,5 @@
     <string name="date">Date: %1$s</string>
     <string name="price">Close Price: %1$s</string>
     <string name="volume">Trading View: %1$s</string>
+    <string name="submit">Submit</string>
 </resources>
