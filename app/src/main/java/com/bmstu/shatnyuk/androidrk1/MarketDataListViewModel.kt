@@ -4,7 +4,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.bmstu.shatnyuk.androidrk1.model.MarketData
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 class MarketDataListViewModel : ViewModel() {
 
@@ -17,11 +18,13 @@ class MarketDataListViewModel : ViewModel() {
     }
 
     fun refreshMarketData(baseAsset: String, quoteAsset: String, numberOfDays: Int) {
-        marketDataList.postValue(loadData(baseAsset, quoteAsset, numberOfDays))
+        GlobalScope.launch {
+            val marketDataListFetched = loadData(baseAsset, quoteAsset, numberOfDays)
+            marketDataList.postValue(marketDataListFetched)
+        }
     }
 
-    private fun loadData(baseAsset: String, quoteAsset: String, numberOfDays: Int) =
-        runBlocking<List<MarketData>> {
-            loadMarketData(baseAsset, quoteAsset, numberOfDays)
-        }
+    private suspend fun loadData(baseAsset: String, quoteAsset: String, numberOfDays: Int): List<MarketData> {
+        return loadMarketData(baseAsset, quoteAsset, numberOfDays)
+    }
 }

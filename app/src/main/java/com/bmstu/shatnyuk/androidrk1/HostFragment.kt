@@ -61,8 +61,8 @@ class HostFragment : Fragment() {
                 layoutManager = viewManager
                 adapter = viewAdapter
             }
+            sendRefreshedData(marketDataList[0])
         })
-        model.refreshMarketData("BTC", "USDT", 100)
     }
 
     fun sendRefreshedData(data: MarketData) {
