@@ -12,15 +12,16 @@ class MarketDataListViewModel : ViewModel() {
         MutableLiveData<List<MarketData>>()
     }
 
-    init {
-        marketDataList.postValue(loadData())
-    }
-
     fun getMarketDataList(): LiveData<List<MarketData>> {
         return marketDataList
     }
 
-    private fun loadData() = runBlocking<List<MarketData>> {
-        loadMarketData("BTC", "USDT", 100)
+    fun refreshMarketData(baseAsset: String, quoteAsset: String, numberOfDays: Int) {
+        marketDataList.postValue(loadData(baseAsset, quoteAsset, numberOfDays))
     }
+
+    private fun loadData(baseAsset: String, quoteAsset: String, numberOfDays: Int) =
+        runBlocking<List<MarketData>> {
+            loadMarketData(baseAsset, quoteAsset, numberOfDays)
+        }
 }

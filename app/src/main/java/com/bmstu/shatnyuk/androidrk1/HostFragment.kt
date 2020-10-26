@@ -49,6 +49,7 @@ class HostFragment : Fragment() {
                 adapter = viewAdapter
             }
         })
+        model.refreshMarketData("BTC", "USDT", 100)
         return binding.root
 
     }
