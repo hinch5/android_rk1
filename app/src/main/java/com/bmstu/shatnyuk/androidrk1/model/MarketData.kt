@@ -1,6 +1,8 @@
 package com.bmstu.shatnyuk.androidrk1.model
 
 class MarketData(
+    val baseAsset: String,
+    val quoteAsset: String,
     val openTime: Long,
     val openPrice: String,
     val highPrice: String,

@@ -37,29 +37,32 @@ object MarketApi {
     }
 }
 
-public fun loadTrades(numberOfDays: Int) = runBlocking<List<MarketData>> {
-    try {
-        val historyRaw = MarketApi.retrofitService.history(
-            "BTCUSDT",
-            "1d",
-            numberOfDays
-        )
-        List<MarketData>(historyRaw.size) { index ->
-            val historyElem = historyRaw[index]
-            MarketData(
-                Long.parseLong(historyElem[0]),
-                historyElem[1],
-                historyElem[2],
-                historyElem[3],
-                historyElem[4],
-                historyElem[5],
-                Long.parseLong(historyElem[6]),
-                historyElem[7],
-                Long.parseLong(historyElem[8])
+public fun loadMarketData(baseAsset: String, quoteAsset: String, numberOfDays: Int) =
+    runBlocking<List<MarketData>> {
+        try {
+            val historyRaw = MarketApi.retrofitService.history(
+                baseAsset + quoteAsset,
+                "1d",
+                numberOfDays
             )
+            List<MarketData>(historyRaw.size) { index ->
+                val historyElem = historyRaw[index]
+                MarketData(
+                    baseAsset,
+                    quoteAsset,
+                    Long.parseLong(historyElem[0]),
+                    historyElem[1],
+                    historyElem[2],
+                    historyElem[3],
+                    historyElem[4],
+                    historyElem[5],
+                    Long.parseLong(historyElem[6]),
+                    historyElem[7],
+                    Long.parseLong(historyElem[8])
+                )
+            }
+        } catch (e: Exception) {
+            Log.e("Market api", "Api error: ${e.message}, $e")
+            throw e
         }
-    } catch (e: Exception) {
-        Log.e("Market api", "Api error: ${e.message}, $e")
-        throw e
     }
-}
