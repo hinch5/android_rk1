@@ -1,13 +1,15 @@
 <resources>
     <string-array name="currency_entries">
         <item>USDT</item>
-        <item>BNB</item>
+        <item>EUR</item>
         <item>RUB</item>
+        <item>GBP</item>
     </string-array>
 
     <string-array name="currency_values">
         <item>USDT</item>
-        <item>BNB</item>
+        <item>EUR</item>
         <item>RUB</item>
+        <item>GBP</item>
     </string-array>
 </resources>
