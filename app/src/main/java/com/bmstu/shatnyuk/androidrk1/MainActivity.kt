@@ -9,6 +9,7 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
+import androidx.preference.EditTextPreference
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import com.bmstu.shatnyuk.androidrk1.databinding.ActivityMainBinding
@@ -60,6 +61,10 @@ class MainActivity : AppCompatActivity() {
     class SettingsFragment : PreferenceFragmentCompat(), Preference.OnPreferenceChangeListener {
         override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
             setPreferencesFromResource(R.xml.root_preferences, rootKey)
+            findPreference<EditTextPreference>("days_qty")!!.onPreferenceChangeListener =
+                Preference.OnPreferenceChangeListener {preference, newValue ->
+                    onPreferenceChange(preference, newValue)
+                }
         }
 
         override fun onPreferenceChange(preference: Preference?, newValue: Any?): Boolean {
