@@ -6,19 +6,20 @@ import android.net.Uri
 import android.os.Bundle
 import android.text.SpannableString
 import android.text.style.UnderlineSpan
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.os.bundleOf
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.setFragmentResult
+import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.preference.PreferenceManager
-import com.bmstu.shatnyuk.androidrk1.model.MarketData
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bmstu.shatnyuk.androidrk1.databinding.FragmentHostBinding
-import java.lang.Exception
+import com.bmstu.shatnyuk.androidrk1.model.MarketData
 
 class HostFragment : Fragment() {
     private var _binding: FragmentHostBinding? = null
@@ -41,43 +42,37 @@ class HostFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         _binding = FragmentHostBinding.inflate(inflater, container, false)
-        val marketDataList = loadMarketData("BTC", "USDT", 100)
-        viewManager = LinearLayoutManager(context)
-        viewAdapter = MarketDataAdapter(marketDataList)
-        recyclerView = binding.marketDataRecyclerView.apply {
-            setHasFixedSize(true)
-            layoutManager = viewManager
-            adapter = viewAdapter
-        }
         setLink()
         binding.link.setOnClickListener { this.openBinance() }
         return binding.root
-
     }
 
-    fun navigateToDetail(data: MarketData) {
-        val navController = this.findNavController()
-        navController.navigate(
-            R.id.action_hostFragment_to_detailsFragment,
-            bundleOf("data" to data)
-        )
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        val model: MarketDataListViewModel by activityViewModels()
+        model.getMarketDataList().observe(viewLifecycleOwner, Observer { marketDataList ->
+            viewManager = LinearLayoutManager(context)
+            viewAdapter = MarketDataAdapter(
+                marketDataList,
+                this
+            ) { hostFragment: HostFragment, marketData: MarketData ->
+                val navController = hostFragment.findNavController()
+                navController.navigate(
+                    R.id.action_hostFragment_to_detailsFragment,
+                    bundleOf("data" to marketData)
+                )
+            }
+            recyclerView = binding.marketDataRecyclerView.apply {
+                setHasFixedSize(true)
+                layoutManager = viewManager
+                adapter = viewAdapter
+            }
+            sendRefreshedData(marketDataList[0])
+        })
     }
 
     fun sendRefreshedData(data: MarketData) {
         setFragmentResult(ARG1, bundleOf("data" to data))
-    }
-
-    fun getQuote(): String {
-        val sharedPreferences: SharedPreferences =
-            PreferenceManager.getDefaultSharedPreferences(context)
-        return sharedPreferences.getString("fiat_currency", "")!!
-    }
-
-    fun getDaysQty(): Long {
-        val sharedPreferences: SharedPreferences =
-            PreferenceManager.getDefaultSharedPreferences(context)
-        val qty: String = sharedPreferences.getString("days_qty", "")!!
-        return qty.toLong()
     }
 
     private fun setLink() {

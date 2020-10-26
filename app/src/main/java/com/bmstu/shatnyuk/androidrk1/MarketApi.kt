@@ -4,12 +4,10 @@ import android.util.Log
 import com.bmstu.shatnyuk.androidrk1.model.MarketData
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
-import kotlinx.coroutines.runBlocking
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 import retrofit2.http.GET
 import retrofit2.http.Query
-import java.lang.Long
 
 private const val BASE_URL = "https://api.binance.com"
 
@@ -37,32 +35,36 @@ object MarketApi {
     }
 }
 
-public fun loadMarketData(baseAsset: String, quoteAsset: String, numberOfDays: Int) =
-    runBlocking<List<MarketData>> {
-        try {
-            val historyRaw = MarketApi.retrofitService.history(
-                baseAsset + quoteAsset,
-                "1d",
-                numberOfDays
+public suspend fun loadMarketData(
+    baseAsset: String,
+    quoteAsset: String,
+    numberOfDays: Int
+): List<MarketData> {
+    try {
+        val historyRaw = MarketApi.retrofitService.history(
+            baseAsset + quoteAsset,
+            "1d",
+            numberOfDays
+        )
+        Log.i("load market data", "Raw history data: $historyRaw")
+        return List<MarketData>(historyRaw.size) { index ->
+            val historyElem = historyRaw[index]
+            MarketData(
+                baseAsset,
+                quoteAsset,
+                historyElem[0].toLong(),
+                historyElem[1],
+                historyElem[2],
+                historyElem[3],
+                historyElem[4],
+                historyElem[5],
+                historyElem[6].toLong(),
+                historyElem[7],
+                historyElem[8].toLong()
             )
-            List<MarketData>(historyRaw.size) { index ->
-                val historyElem = historyRaw[index]
-                MarketData(
-                    baseAsset,
-                    quoteAsset,
-                    Long.parseLong(historyElem[0]),
-                    historyElem[1],
-                    historyElem[2],
-                    historyElem[3],
-                    historyElem[4],
-                    historyElem[5],
-                    Long.parseLong(historyElem[6]),
-                    historyElem[7],
-                    Long.parseLong(historyElem[8])
-                )
-            }
-        } catch (e: Exception) {
-            Log.e("Market api", "Api error: ${e.message}, $e")
-            throw e
         }
+    } catch (e: Exception) {
+        Log.e("Market api", "Api error: ${e.message}, $e")
+        throw e
     }
+}
