@@ -2,7 +2,7 @@
 
     <PreferenceCategory app:title="@string/price_parameters">
         <ListPreference
-            app:defaultValue="usd"
+            app:defaultValue="USDT"
             app:key="fiat_currency"
             app:entries="@array/currency_entries"
             app:entryValues="@array/currency_values"
