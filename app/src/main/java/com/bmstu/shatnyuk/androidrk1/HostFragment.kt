@@ -8,12 +8,26 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.os.bundleOf
 import androidx.fragment.app.setFragmentResult
-import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
 import androidx.preference.PreferenceManager
 import com.bmstu.shatnyuk.androidrk1.model.MarketData
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.bmstu.shatnyuk.androidrk1.databinding.FragmentHostBinding
+import java.lang.Exception
 
 class HostFragment : Fragment() {
+    private var _binding: FragmentHostBinding? = null
+
+    private val binding
+        get(): FragmentHostBinding {
+            return _binding ?: throw Exception("null binding")
+        }
+
+    private lateinit var recyclerView: RecyclerView
+    private lateinit var viewAdapter: RecyclerView.Adapter<*>
+    private lateinit var viewManager: RecyclerView.LayoutManager
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
     }
@@ -22,8 +36,17 @@ class HostFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_host, container, false)
+        _binding = FragmentHostBinding.inflate(inflater, container, false)
+        val marketDataList = loadMarketData("BTC", "USDT", 100)
+        viewManager = LinearLayoutManager(context)
+        viewAdapter = MarketDataAdapter(marketDataList)
+        recyclerView = binding.marketDataRecyclerView.apply {
+            setHasFixedSize(true)
+            layoutManager = viewManager
+            adapter = viewAdapter
+        }
+        return binding.root
+
     }
 
     fun navigateToDetail(data: MarketData) {
