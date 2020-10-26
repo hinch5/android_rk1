@@ -3,9 +3,11 @@ package com.bmstu.shatnyuk.androidrk1
 import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.PersistableBundle
 import android.view.*
 import android.widget.Toast
 import androidx.activity.viewModels
+import androidx.lifecycle.Observer
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI
@@ -21,7 +23,11 @@ import java.lang.Exception
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding;
     private lateinit var appBarConfiguration: AppBarConfiguration
-    private val model: MarketDataListViewModel by viewModels()
+    private val marketDataListViewModel: MarketDataListViewModel by viewModels()
+    private val baseQuoteViewModel: BaseQuoteViewModel by viewModels()
+    private val baseAssetKey = "baseAsset"
+    private val defaultBaseAsset = "BTC"
+    private lateinit var baseAsset: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,7 +42,26 @@ class MainActivity : AppCompatActivity() {
         appBarConfiguration = AppBarConfiguration(navController.graph, binding.root)
         setupActionBarWithNavController(navController, appBarConfiguration)
         binding.navView.setupWithNavController(navController)
-        model.refreshMarketData("BTC", getQuote(), getDaysQty().toInt())
+        val baseAssetSaved = savedInstanceState?.getString(baseAssetKey) ?: defaultBaseAsset
+        baseQuoteViewModel.baseAssetInput(baseAssetSaved)
+        baseQuoteViewModel.getBaseAsset().observe(this, Observer { asset ->
+            baseAsset = asset
+            marketDataListViewModel.refreshMarketData(
+                baseAsset,
+                getQuote(),
+                getDaysQty().toInt()
+            )
+            Toast.makeText(
+                this,
+                "New base asset: $baseAsset",
+                Toast.LENGTH_SHORT
+            ).show()
+        })
+    }
+
+    override fun onSaveInstanceState(outState: Bundle, outPersistentState: PersistableBundle) {
+        outState.putString(baseAssetKey, baseAsset)
+        super.onSaveInstanceState(outState, outPersistentState)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -47,7 +72,7 @@ class MainActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         val itemId = item.itemId
         if (itemId == R.id.action_refresh) {
-            model.refreshMarketData("BTC", getQuote(), getDaysQty().toInt())
+            marketDataListViewModel.refreshMarketData("BTC", getQuote(), getDaysQty().toInt())
         } else if (itemId == R.id.action_settings) {
             val navHostFragment =
                 supportFragmentManager.findFragmentById(R.id.host_fragment) as NavHostFragment
@@ -67,13 +92,13 @@ class MainActivity : AppCompatActivity() {
     fun getQuote(): String {
         val sharedPreferences: SharedPreferences =
             PreferenceManager.getDefaultSharedPreferences(this)
-        return sharedPreferences.getString("fiat_currency", "USDT")!!
+        return sharedPreferences.getString("fiat_currency", "")!!
     }
 
     fun getDaysQty(): Long {
         val sharedPreferences: SharedPreferences =
             PreferenceManager.getDefaultSharedPreferences(this)
-        val qty: String = sharedPreferences.getString("days_qty", "100")!!
+        val qty: String = sharedPreferences.getString("days_qty", "")!!
         return qty.toLong()
     }
 
@@ -81,7 +106,7 @@ class MainActivity : AppCompatActivity() {
         override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
             setPreferencesFromResource(R.xml.root_preferences, rootKey)
             findPreference<EditTextPreference>("days_qty")!!.onPreferenceChangeListener =
-                Preference.OnPreferenceChangeListener {preference, newValue ->
+                Preference.OnPreferenceChangeListener { preference, newValue ->
                     onPreferenceChange(preference, newValue)
                 }
         }

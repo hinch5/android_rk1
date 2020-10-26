@@ -8,4 +8,5 @@
     <string name="main_page">Main Page</string>
     <string name="navigation">Navigation</string>
     <string name="days_qty">Days Qty</string>
+    <string name="details">Details</string>
 </resources>

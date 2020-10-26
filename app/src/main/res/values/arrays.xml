@@ -12,4 +12,11 @@
         <item>RUB</item>
         <item>GBP</item>
     </string-array>
+
+    <string-array name="base_currency_values">
+        <item>BTC</item>
+        <item>ETH</item>
+        <item>BNB</item>
+        <item>XRP</item>
+    </string-array>
 </resources>

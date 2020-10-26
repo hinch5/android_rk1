@@ -3,29 +3,39 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     android:paddingLeft="12dp"
     android:paddingTop="20dp"
     android:paddingRight="12dp"
     android:paddingBottom="20dp"
-    android:orientation="vertical"
     tools:context=".HostFragment">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <EditText
+            android:id="@+id/base_asset_input"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/market_data_recycler_view"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="10"
-        android:scrollbars="vertical"/>
+        android:scrollbars="vertical" />
 
     <TextView
         android:id="@+id/link"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:padding="16dp"
-        android:textSize="16sp"
         android:gravity="center"
+        android:padding="16dp"
         android:textColor="@color/colorLink"
-        />
+        android:textSize="16sp" />
 
 </LinearLayout>
