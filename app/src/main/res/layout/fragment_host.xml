@@ -7,12 +7,25 @@
     android:paddingTop="20dp"
     android:paddingRight="12dp"
     android:paddingBottom="20dp"
+    android:orientation="vertical"
     tools:context=".HostFragment">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/market_data_recycler_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="10"
         android:scrollbars="vertical"/>
+
+    <TextView
+        android:id="@+id/link"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:padding="16dp"
+        android:textSize="16sp"
+        android:gravity="center"
+        android:textColor="@color/colorLink"
+        />
 
 </LinearLayout>

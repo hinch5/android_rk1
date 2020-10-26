@@ -1,7 +1,11 @@
 package com.bmstu.shatnyuk.androidrk1
 
+import android.content.Intent
 import android.content.SharedPreferences
+import android.net.Uri
 import android.os.Bundle
+import android.text.SpannableString
+import android.text.style.UnderlineSpan
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -45,6 +49,8 @@ class HostFragment : Fragment() {
             layoutManager = viewManager
             adapter = viewAdapter
         }
+        setLink()
+        binding.link.setOnClickListener { this.openBinance() }
         return binding.root
 
     }
@@ -72,6 +78,20 @@ class HostFragment : Fragment() {
             PreferenceManager.getDefaultSharedPreferences(context)
         val qty: String = sharedPreferences.getString("days_qty", "")!!
         return qty.toLong()
+    }
+
+    private fun setLink() {
+        val content = SpannableString("https://www.binance.com/ru/trade/BTC_USDT")
+        content.setSpan(UnderlineSpan(), 0, content.length, 0)
+        binding.link.text = content
+    }
+
+    private fun openBinance() {
+        val webpage: Uri = Uri.parse(binding.link.text.toString())
+        val intent = Intent(Intent.ACTION_VIEW, webpage)
+        if (intent.resolveActivity(activity?.packageManager!!) != null) {
+            startActivity(intent)
+        }
     }
 
     companion object {
