@@ -72,7 +72,15 @@ class MainActivity : AppCompatActivity() {
             val navHostFragment =
                 supportFragmentManager.findFragmentById(R.id.host_fragment) as NavHostFragment
             val navController = navHostFragment.navController
-            navController.navigate(R.id.action_hostFragment_to_settingsActivity)
+            for (fragment in supportFragmentManager.fragments) {
+                if (fragment.isVisible) {
+                    if (fragment is HostFragment) {
+                        navController.navigate(R.id.action_hostFragment_to_settingsActivity)
+                    } else if (fragment is DetailsFragment) {
+                        navController.navigate(R.id.action_detailFragment_to_settingsActivity)
+                    }
+                }
+            }
         }
         return super.onOptionsItemSelected(item)
     }
