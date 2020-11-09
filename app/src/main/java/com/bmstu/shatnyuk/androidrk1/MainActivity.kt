@@ -93,13 +93,13 @@ class MainActivity : AppCompatActivity() {
     fun getQuote(): String {
         val sharedPreferences: SharedPreferences =
             PreferenceManager.getDefaultSharedPreferences(this)
-        return sharedPreferences.getString("fiat_currency", "")!!
+        return sharedPreferences.getString("fiat_currency", "USDT")!!
     }
 
     fun getDaysQty(): Long {
         val sharedPreferences: SharedPreferences =
             PreferenceManager.getDefaultSharedPreferences(this)
-        val qty: String = sharedPreferences.getString("days_qty", "")!!
+        val qty: String = sharedPreferences.getString("days_qty", "1")!!
         return qty.toLong()
     }
 
