@@ -72,13 +72,11 @@ class MainActivity : AppCompatActivity() {
             val navHostFragment =
                 supportFragmentManager.findFragmentById(R.id.host_fragment) as NavHostFragment
             val navController = navHostFragment.navController
-            for (fragment in supportFragmentManager.fragments) {
-                if (fragment.isVisible) {
-                    if (fragment is HostFragment) {
-                        navController.navigate(R.id.action_hostFragment_to_settingsActivity)
-                    } else if (fragment is DetailsFragment) {
-                        navController.navigate(R.id.action_detailFragment_to_settingsActivity)
-                    }
+            if (navController.currentDestination != null) {
+                if (navController.currentDestination!!.id == R.id.hostFragment) {
+                    navController.navigate(R.id.action_hostFragment_to_settingsActivity)
+                } else if (navController.currentDestination!!.id == R.id.detailsFragment) {
+                    navController.navigate(R.id.action_detailFragment_to_settingsActivity)
                 }
             }
         }
