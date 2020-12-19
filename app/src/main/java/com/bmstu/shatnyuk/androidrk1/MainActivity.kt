@@ -27,7 +27,6 @@ class MainActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenceCh
     private lateinit var appBarConfiguration: AppBarConfiguration
     private val marketDataListViewModel: MarketDataListViewModel by viewModels()
     private val baseQuoteViewModel: BaseQuoteViewModel by viewModels()
-    private val defaultBaseAsset = "BTC"
     private lateinit var baseAsset: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -39,10 +38,6 @@ class MainActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenceCh
                 getDaysQty().toInt()
             )
         })
-        val baseAssetSaved = baseQuoteViewModel.getBaseAsset().value
-        if (baseAssetSaved == null) {
-            baseQuoteViewModel.baseAssetInput(defaultBaseAsset)
-        }
 
         if (isDarkTheme()) {
             setTheme(R.style.AppTheme_Dark)
@@ -117,8 +112,16 @@ class MainActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenceCh
     }
 
     override fun onSharedPreferenceChanged(preferences: SharedPreferences?, key: String?) {
-        if (key == "theme_name") {
-            recreate()
+        when (key) {
+            "theme_name" -> {
+                recreate()
+            }
+            "days_qty" -> {
+                marketDataListViewModel.refreshMarketData(baseAsset, getQuote(), getDaysQty().toInt())
+            }
+            "fiat_currency" -> {
+                marketDataListViewModel.refreshMarketData(baseAsset, getQuote(), getDaysQty().toInt())
+            }
         }
     }
 

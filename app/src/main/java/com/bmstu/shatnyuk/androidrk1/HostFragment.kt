@@ -78,7 +78,11 @@ class HostFragment : Fragment(), AdapterView.OnItemSelectedListener {
                     adapter = viewAdapter
                 }
             })
-        val liveBaseAsset = baseQuoteViewModel.getBaseAsset()
+        var baseAsset = baseQuoteViewModel.getBaseAsset().value
+        if (baseAsset == null) {
+            baseAsset = "BTC"
+            baseQuoteViewModel.baseAssetInput(baseAsset)
+        }
         ArrayAdapter.createFromResource(
             requireContext(),
             R.array.base_currency_values,
@@ -86,12 +90,10 @@ class HostFragment : Fragment(), AdapterView.OnItemSelectedListener {
         ).also {
             it.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
             binding.baseAssetInput.adapter = it
-            val v = liveBaseAsset.value
-            if (v != null) {
-                binding.baseAssetInput.setSelection(it.getPosition(v))
-            }
+            val v = baseAsset
+            binding.baseAssetInput.setSelection(it.getPosition(v))
+            binding.baseAssetInput.onItemSelectedListener = this
         }
-        binding.baseAssetInput.onItemSelectedListener = this
     }
 
     private fun setLink(baseAsset: String, quoteAsset: String) {
