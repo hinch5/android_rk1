@@ -11,7 +11,11 @@
         tools:layout="@layout/fragment_host">
         <action
             android:id="@+id/action_hostFragment_to_settingsActivity"
-            app:destination="@id/settingsFragment" />
+            app:destination="@id/settingsFragment"
+            app:enterAnim="@android:anim/slide_in_left"
+            app:exitAnim="@android:anim/slide_out_right"
+            app:popEnterAnim="@android:anim/slide_in_left"
+            app:popExitAnim="@android:anim/slide_out_right" />
         <action
             android:id="@+id/action_hostFragment_to_detailsFragment"
             app:destination="@+id/detailsFragment" />
