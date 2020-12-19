@@ -10,6 +10,8 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
@@ -23,7 +25,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bmstu.shatnyuk.androidrk1.databinding.FragmentHostBinding
 import com.bmstu.shatnyuk.androidrk1.model.MarketData
 
-class HostFragment : Fragment() {
+class HostFragment : Fragment(), AdapterView.OnItemSelectedListener {
     private var _binding: FragmentHostBinding? = null
 
     private val binding
@@ -35,6 +37,7 @@ class HostFragment : Fragment() {
     private lateinit var viewAdapter: RecyclerView.Adapter<*>
     private lateinit var viewManager: RecyclerView.LayoutManager
     private var baseAsset: String? = null
+    private val baseQuoteViewModel: BaseQuoteViewModel by activityViewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -75,35 +78,20 @@ class HostFragment : Fragment() {
                     adapter = viewAdapter
                 }
             })
-        val baseQuoteViewModel: BaseQuoteViewModel by activityViewModels()
         val liveBaseAsset = baseQuoteViewModel.getBaseAsset()
-        liveBaseAsset.observe(viewLifecycleOwner, object : Observer<String> {
-            override fun onChanged(asset: String) {
-                baseAsset = asset
-                setLink(baseAsset!!, getQuote())
-                binding.baseAssetInput.setText(asset)
-                liveBaseAsset.removeObserver(this)
-            }
-        })
-        binding.baseAssetSubmit.setOnClickListener {
-            baseAsset = binding.baseAssetInput.text.toString()
-            if (
-                resources
-                    .getStringArray(R.array.base_currency_values)
-                    .contains(baseAsset)
-            ) {
-
-                baseQuoteViewModel.baseAssetInput(
-                    baseAsset!!
-                )
-            } else {
-                Toast.makeText(
-                    context,
-                    "Unsupported base asset",
-                    Toast.LENGTH_SHORT
-                ).show()
+        ArrayAdapter.createFromResource(
+            requireContext(),
+            R.array.base_currency_values,
+            android.R.layout.simple_spinner_item
+        ).also {
+            it.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+            binding.baseAssetInput.adapter = it
+            val v = liveBaseAsset.value
+            if (v != null) {
+                binding.baseAssetInput.setSelection(it.getPosition(v))
             }
         }
+        binding.baseAssetInput.onItemSelectedListener = this
     }
 
     private fun setLink(baseAsset: String, quoteAsset: String) {
@@ -112,7 +100,7 @@ class HostFragment : Fragment() {
         binding.link.text = content
     }
 
-    fun getQuote(): String {
+    private fun getQuote(): String {
         val sharedPreferences: SharedPreferences =
             PreferenceManager.getDefaultSharedPreferences(context)
         return sharedPreferences.getString("fiat_currency", "")!!
@@ -126,8 +114,12 @@ class HostFragment : Fragment() {
         }
     }
 
-    companion object {
-        @JvmStatic
-        fun newInstance() = HostFragment()
+    override fun onItemSelected(parent: AdapterView<*>, view: View?, pos: Int, id: Long) {
+        val value = parent.getItemAtPosition(pos)
+        setLink(value.toString(), getQuote())
+        baseQuoteViewModel.baseAssetInput(value.toString())
+    }
+
+    override fun onNothingSelected(parent: AdapterView<*>) {
     }
 }

@@ -10,24 +10,29 @@
     android:paddingBottom="20dp"
     tools:context=".HostFragment">
 
-    <LinearLayout
-        android:padding="16dp"
+    <Spinner
+        android:id="@+id/base_asset_input"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
-        <EditText
-            android:id="@+id/base_asset_input"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1" />
+        android:padding="16dp"/>
+<!--    <LinearLayout-->
+<!--        android:padding="16dp"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:orientation="horizontal">-->
+<!--        <EditText-->
+<!--            android:id="@+id/base_asset_input"-->
+<!--            android:layout_width="0dp"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_weight="1" />-->
 
-        <Button
-            android:id="@+id/base_asset_submit"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="wrap_content"
-            android:text="@string/submit" />
-    </LinearLayout>
+<!--        <Button-->
+<!--            android:id="@+id/base_asset_submit"-->
+<!--            android:layout_width="0dp"-->
+<!--            android:layout_weight="1"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:text="@string/submit" />-->
+<!--    </LinearLayout>-->
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/market_data_recycler_view"

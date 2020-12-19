@@ -31,6 +31,19 @@ class MainActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenceCh
     private lateinit var baseAsset: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        baseQuoteViewModel.getBaseAsset().observe(this, Observer { asset ->
+            baseAsset = asset
+            marketDataListViewModel.refreshMarketData(
+                baseAsset,
+                getQuote(),
+                getDaysQty().toInt()
+            )
+        })
+        val baseAssetSaved = baseQuoteViewModel.getBaseAsset().value
+        if (baseAssetSaved == null) {
+            baseQuoteViewModel.baseAssetInput(defaultBaseAsset)
+        }
+
         if (isDarkTheme()) {
             setTheme(R.style.AppTheme_Dark)
         } else {
@@ -49,18 +62,6 @@ class MainActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenceCh
         setupActionBarWithNavController(navController, appBarConfiguration)
         binding.navView.setupWithNavController(navController)
 
-        baseQuoteViewModel.getBaseAsset().observe(this, Observer { asset ->
-            baseAsset = asset
-            marketDataListViewModel.refreshMarketData(
-                baseAsset,
-                getQuote(),
-                getDaysQty().toInt()
-            )
-        })
-        val baseAssetSaved = baseQuoteViewModel.getBaseAsset().value
-        if (baseAssetSaved == null) {
-            baseQuoteViewModel.baseAssetInput(defaultBaseAsset)
-        }
         PreferenceManager.getDefaultSharedPreferences(this)
             .registerOnSharedPreferenceChangeListener(this)
     }
