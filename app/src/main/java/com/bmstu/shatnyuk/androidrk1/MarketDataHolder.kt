@@ -4,6 +4,8 @@ import android.view.View
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bmstu.shatnyuk.androidrk1.model.MarketData
+import java.text.DecimalFormat
+import java.text.SimpleDateFormat
 import java.util.*
 
 class MarketDataHolder(private val view: View) : RecyclerView.ViewHolder(view) {
@@ -15,10 +17,12 @@ class MarketDataHolder(private val view: View) : RecyclerView.ViewHolder(view) {
 
     fun setData(marketData: MarketData) {
         baseAsset.text = marketData.baseAsset
-        price.text = marketData.closePrice
+        val dec = DecimalFormat("#.##")
+        price.text = dec.format(marketData.closePrice.toDouble())
         quoteAsset.text = marketData.quoteAsset
         val closeDate = Date(marketData.closeTime)
-        date.text = closeDate.toString()
+        val fromat = SimpleDateFormat("yyyy-MM-dd")
+        date.text = fromat.format(closeDate).toString()
         data = marketData
     }
 
