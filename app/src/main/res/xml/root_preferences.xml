@@ -15,4 +15,11 @@
             app:useSimpleSummaryProvider="true"
             />
     </PreferenceCategory>
+    <PreferenceCategory app:title="Style Parameters">
+        <SwitchPreference
+            app:defaultValue="false"
+            app:key="theme_name"
+            app:title="@string/dark_theme"
+            />
+    </PreferenceCategory>
 </PreferenceScreen>

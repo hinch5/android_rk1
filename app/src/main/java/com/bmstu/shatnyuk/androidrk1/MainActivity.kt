@@ -1,9 +1,11 @@
 package com.bmstu.shatnyuk.androidrk1
 
+import android.content.Intent
 import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.PersistableBundle
+import android.util.Log
 import android.view.*
 import android.widget.Toast
 import androidx.activity.viewModels
@@ -20,16 +22,20 @@ import androidx.preference.PreferenceManager
 import com.bmstu.shatnyuk.androidrk1.databinding.ActivityMainBinding
 import java.lang.Exception
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenceChangeListener {
     private lateinit var binding: ActivityMainBinding;
     private lateinit var appBarConfiguration: AppBarConfiguration
     private val marketDataListViewModel: MarketDataListViewModel by viewModels()
     private val baseQuoteViewModel: BaseQuoteViewModel by viewModels()
-    private val baseAssetKey = "baseAsset"
     private val defaultBaseAsset = "BTC"
     private lateinit var baseAsset: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        if (isDarkTheme()) {
+            setTheme(R.style.AppTheme_Dark)
+        } else {
+            setTheme(R.style.AppTheme_Light)
+        }
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -42,8 +48,7 @@ class MainActivity : AppCompatActivity() {
         appBarConfiguration = AppBarConfiguration(navController.graph, binding.root)
         setupActionBarWithNavController(navController, appBarConfiguration)
         binding.navView.setupWithNavController(navController)
-        val baseAssetSaved = savedInstanceState?.getString(baseAssetKey) ?: defaultBaseAsset
-        baseQuoteViewModel.baseAssetInput(baseAssetSaved)
+
         baseQuoteViewModel.getBaseAsset().observe(this, Observer { asset ->
             baseAsset = asset
             marketDataListViewModel.refreshMarketData(
@@ -52,11 +57,12 @@ class MainActivity : AppCompatActivity() {
                 getDaysQty().toInt()
             )
         })
-    }
-
-    override fun onSaveInstanceState(outState: Bundle, outPersistentState: PersistableBundle) {
-        outState.putString(baseAssetKey, baseAsset)
-        super.onSaveInstanceState(outState, outPersistentState)
+        val baseAssetSaved = baseQuoteViewModel.getBaseAsset().value
+        if (baseAssetSaved == null) {
+            baseQuoteViewModel.baseAssetInput(defaultBaseAsset)
+        }
+        PreferenceManager.getDefaultSharedPreferences(this)
+            .registerOnSharedPreferenceChangeListener(this)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -90,17 +96,35 @@ class MainActivity : AppCompatActivity() {
         return NavigationUI.navigateUp(navController, appBarConfiguration)
     }
 
-    fun getQuote(): String {
+    private fun getQuote(): String {
         val sharedPreferences: SharedPreferences =
             PreferenceManager.getDefaultSharedPreferences(this)
         return sharedPreferences.getString("fiat_currency", "USDT")!!
     }
 
-    fun getDaysQty(): Long {
+    private fun getDaysQty(): Long {
         val sharedPreferences: SharedPreferences =
             PreferenceManager.getDefaultSharedPreferences(this)
         val qty: String = sharedPreferences.getString("days_qty", "1")!!
         return qty.toLong()
+    }
+
+    private fun isDarkTheme(): Boolean {
+        val sharedPreferences: SharedPreferences =
+            PreferenceManager.getDefaultSharedPreferences(this)
+        return sharedPreferences.getBoolean("theme_name", false)
+    }
+
+    override fun onSharedPreferenceChanged(preferences: SharedPreferences?, key: String?) {
+        if (key == "theme_name") {
+            recreate()
+        }
+    }
+
+    override fun onDestroy() {
+        PreferenceManager.getDefaultSharedPreferences(this)
+            .unregisterOnSharedPreferenceChangeListener(this)
+        super.onDestroy()
     }
 
     class SettingsFragment : PreferenceFragmentCompat(), Preference.OnPreferenceChangeListener {
