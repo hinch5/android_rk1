@@ -74,10 +74,19 @@ class HostFragment : Fragment(), AdapterView.OnItemSelectedListener {
 
         marketDataListViewModel.getMarketDataList()
             .observe(viewLifecycleOwner, Observer { marketDataList ->
-                Log.i("GOT", "INFO")
                 viewAdapter.data = marketDataList.toTypedArray()
-                recyclerView.visibility = View.VISIBLE
-                binding.progressBar.visibility = View.GONE
+            })
+
+        marketDataListViewModel.getRefreshing()
+            .observe(viewLifecycleOwner, Observer { refreshing ->
+                Log.i("REFRESHING", refreshing.toString())
+                if (refreshing) {
+                    recyclerView.visibility = View.GONE
+                    binding.progressBar.visibility = View.VISIBLE
+                } else {
+                    recyclerView.visibility = View.VISIBLE
+                    binding.progressBar.visibility = View.GONE
+                }
             })
         var baseAsset = baseQuoteViewModel.getBaseAsset().value
         if (baseAsset == null) {
