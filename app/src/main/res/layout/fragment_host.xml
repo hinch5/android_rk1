@@ -13,8 +13,7 @@
     <LinearLayout
         android:padding="16dp"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="3"
+        android:layout_height="wrap_content"
         android:orientation="horizontal">
         <EditText
             android:id="@+id/base_asset_input"
@@ -34,14 +33,13 @@
         android:id="@+id/market_data_recycler_view"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="6"
+        android:layout_weight="1"
         android:scrollbars="vertical" />
 
     <TextView
         android:id="@+id/link"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="2"
+        android:layout_height="wrap_content"
         android:gravity="center"
         android:padding="16dp"
         android:textColor="@color/colorLink"
