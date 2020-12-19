@@ -22,10 +22,11 @@ import androidx.navigation.fragment.findNavController
 import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.bmstu.shatnyuk.androidrk1.databinding.FragmentHostBinding
 import com.bmstu.shatnyuk.androidrk1.model.MarketData
 
-class HostFragment : Fragment(), AdapterView.OnItemSelectedListener {
+class HostFragment : Fragment(), AdapterView.OnItemSelectedListener, SwipeRefreshLayout.OnRefreshListener {
     private var _binding: FragmentHostBinding? = null
 
     private val binding
@@ -38,6 +39,7 @@ class HostFragment : Fragment(), AdapterView.OnItemSelectedListener {
     private lateinit var viewManager: RecyclerView.LayoutManager
     private var baseAsset: String? = null
     private val baseQuoteViewModel: BaseQuoteViewModel by activityViewModels()
+    private val marketDataListViewModel: MarketDataListViewModel by activityViewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -54,7 +56,6 @@ class HostFragment : Fragment(), AdapterView.OnItemSelectedListener {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val marketDataListViewModel: MarketDataListViewModel by activityViewModels()
 
         val viewManager = LinearLayoutManager(requireContext())
         val viewAdapter = MarketDataAdapter(
@@ -83,9 +84,11 @@ class HostFragment : Fragment(), AdapterView.OnItemSelectedListener {
                 if (refreshing) {
                     recyclerView.visibility = View.GONE
                     binding.progressBar.visibility = View.VISIBLE
+                    binding.marketDataSwipe.isRefreshing = true
                 } else {
                     recyclerView.visibility = View.VISIBLE
                     binding.progressBar.visibility = View.GONE
+                    binding.marketDataSwipe.isRefreshing = false
                 }
             })
         var baseAsset = baseQuoteViewModel.getBaseAsset().value
@@ -104,6 +107,7 @@ class HostFragment : Fragment(), AdapterView.OnItemSelectedListener {
             binding.baseAssetInput.setSelection(it.getPosition(v))
             binding.baseAssetInput.onItemSelectedListener = this
         }
+        binding.marketDataSwipe.setOnRefreshListener(this)
     }
 
     private fun setLink(baseAsset: String, quoteAsset: String) {
@@ -114,8 +118,15 @@ class HostFragment : Fragment(), AdapterView.OnItemSelectedListener {
 
     private fun getQuote(): String {
         val sharedPreferences: SharedPreferences =
-            PreferenceManager.getDefaultSharedPreferences(context)
+            PreferenceManager.getDefaultSharedPreferences(requireContext())
         return sharedPreferences.getString("fiat_currency", "")!!
+    }
+
+    private fun getDaysQty(): Long {
+        val sharedPreferences: SharedPreferences =
+            PreferenceManager.getDefaultSharedPreferences(requireContext())
+        val qty: String = sharedPreferences.getString("days_qty", "1")!!
+        return qty.toLong()
     }
 
     private fun openBinance() {
@@ -128,10 +139,19 @@ class HostFragment : Fragment(), AdapterView.OnItemSelectedListener {
 
     override fun onItemSelected(parent: AdapterView<*>, view: View?, pos: Int, id: Long) {
         val value = parent.getItemAtPosition(pos)
+        baseAsset = value.toString()
         setLink(value.toString(), getQuote())
         baseQuoteViewModel.baseAssetInput(value.toString())
     }
 
     override fun onNothingSelected(parent: AdapterView<*>) {
+    }
+
+    override fun onRefresh() {
+        marketDataListViewModel.refreshMarketData(
+            baseAsset!!,
+            getQuote(),
+            getDaysQty().toInt()
+        )
     }
 }

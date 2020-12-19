@@ -1,32 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.swiperefreshlayout.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    style="@style/HostMainContainer"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/market_data_swipe"
     tools:context=".HostFragment">
 
-    <Spinner
-        android:id="@+id/base_asset_input"
-        style="@style/HostSpinner" />
+    <LinearLayout style="@style/HostMainContainer">
 
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1">
+        <Spinner
+            android:id="@+id/base_asset_input"
+            style="@style/HostSpinner" />
 
-        <ProgressBar
-            android:id="@+id/progress_bar"
-            style="?android:progressBarStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center" />
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1">
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/market_data_recycler_view"
-            style="@style/HostRecyclerView" />
-    </FrameLayout>
+            <ProgressBar
+                android:id="@+id/progress_bar"
+                style="?android:progressBarStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center" />
 
-    <TextView
-        android:id="@+id/link"
-        style="@style/HostLink" />
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/market_data_recycler_view"
+                style="@style/HostRecyclerView" />
+        </FrameLayout>
 
-</LinearLayout>
+        <TextView
+            android:id="@+id/link"
+            style="@style/HostLink" />
+
+    </LinearLayout>
+</androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
