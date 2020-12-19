@@ -55,28 +55,29 @@ class HostFragment : Fragment(), AdapterView.OnItemSelectedListener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val marketDataListViewModel: MarketDataListViewModel by activityViewModels()
+
+        val viewManager = LinearLayoutManager(requireContext())
+        val viewAdapter = MarketDataAdapter(
+            this
+        ) { hostFragment: HostFragment, marketData: MarketData ->
+            val navController = hostFragment.findNavController()
+            navController.navigate(
+                R.id.action_hostFragment_to_detailsFragment,
+                bundleOf("data" to marketData)
+            )
+        }
+        val recyclerView = binding.marketDataRecyclerView.apply {
+            setHasFixedSize(true)
+            layoutManager = viewManager
+            adapter = viewAdapter
+        }
+
         marketDataListViewModel.getMarketDataList()
             .observe(viewLifecycleOwner, Observer { marketDataList ->
                 Log.i("GOT", "INFO")
-                if (baseAsset != null) {
-                    setLink(baseAsset!!, getQuote())
-                }
-                viewManager = LinearLayoutManager(context)
-                viewAdapter = MarketDataAdapter(
-                    marketDataList,
-                    this
-                ) { hostFragment: HostFragment, marketData: MarketData ->
-                    val navController = hostFragment.findNavController()
-                    navController.navigate(
-                        R.id.action_hostFragment_to_detailsFragment,
-                        bundleOf("data" to marketData)
-                    )
-                }
-                recyclerView = binding.marketDataRecyclerView.apply {
-                    setHasFixedSize(true)
-                    layoutManager = viewManager
-                    adapter = viewAdapter
-                }
+                viewAdapter.data = marketDataList.toTypedArray()
+                recyclerView.visibility = View.VISIBLE
+                binding.progressBar.visibility = View.GONE
             })
         var baseAsset = baseQuoteViewModel.getBaseAsset().value
         if (baseAsset == null) {

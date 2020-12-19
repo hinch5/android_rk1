@@ -15,31 +15,24 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="16dp"/>
-<!--    <LinearLayout-->
-<!--        android:padding="16dp"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:orientation="horizontal">-->
-<!--        <EditText-->
-<!--            android:id="@+id/base_asset_input"-->
-<!--            android:layout_width="0dp"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:layout_weight="1" />-->
 
-<!--        <Button-->
-<!--            android:id="@+id/base_asset_submit"-->
-<!--            android:layout_width="0dp"-->
-<!--            android:layout_weight="1"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:text="@string/submit" />-->
-<!--    </LinearLayout>-->
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/market_data_recycler_view"
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"
-        android:scrollbars="vertical" />
+        android:layout_weight="1">
+        <ProgressBar
+            android:id="@+id/progress_bar"
+            style="?android:progressBarStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            />
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/market_data_recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scrollbars="vertical" />
+    </FrameLayout>
 
     <TextView
         android:id="@+id/link"
