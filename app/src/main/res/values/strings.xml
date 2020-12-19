@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">AndroidRk1</string>
-    <string name="title_activity_settings">SettingsActivity</string>
+    <string name="title_activity_settings">Settings Activity</string>
     <string name="price_parameters">Price Parameters</string>
     <string name="fiat_currency">Fiat Currency</string>
     <string name="settings">Settings</string>
@@ -9,11 +9,11 @@
     <string name="navigation">Navigation</string>
     <string name="days_qty">Days Qty</string>
     <string name="details">Details</string>
-    <string name="base_asset">Base Asset: %1$s</string>
-    <string name="quote_asset">Quote Asset: %1$s</string>
-    <string name="date">Date: %1$s</string>
-    <string name="price">Close Price: %1$s</string>
-    <string name="volume">Trading Volume: %1$s</string>
+    <string name="base_asset">Base Asset:</string>
+    <string name="quote_asset">Quote Asset:</string>
+    <string name="date">Date:</string>
+    <string name="price">Close Price:</string>
+    <string name="volume">Trading Volume:</string>
     <string name="submit">Submit</string>
     <string name="dark_theme">Dark Theme</string>
 </resources>

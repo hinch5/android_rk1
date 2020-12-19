@@ -38,9 +38,10 @@ class DetailsFragment : Fragment() {
         _binding = FragmentDetailsBinding.inflate(inflater, container, false)
         handleData(data)
         val marketDataListViewModel: MarketDataListViewModel by activityViewModels()
-        marketDataListViewModel.getMarketDataList().observe(viewLifecycleOwner, androidx.lifecycle.Observer {
-            handleData(it[0])
-        })
+        marketDataListViewModel.getMarketDataList()
+            .observe(viewLifecycleOwner, androidx.lifecycle.Observer {
+                handleData(it[0])
+            })
 
         return binding.root
     }
@@ -48,11 +49,11 @@ class DetailsFragment : Fragment() {
     private fun handleData(_data: MarketData) {
         if (count != 1) {
             data = _data
-            binding.baseAssetDetail.text = resources.getString(R.string.base_asset, data.baseAsset)
-            binding.quoteAssetDetail.text = resources.getString(R.string.quote_asset, data.quoteAsset)
-            binding.dateDetail.text = resources.getString(R.string.date, Date(data.closeTime).toString())
-            binding.priceDetail.text = resources.getString(R.string.price, data.closePrice)
-            binding.volumeDetail.text = resources.getString(R.string.volume, data.volume)
+            binding.baseAssetDetail.text = data.baseAsset
+            binding.quoteAssetDetail.text = data.quoteAsset
+            binding.dateDetail.text = Date(data.closeTime).toString()
+            binding.priceDetail.text = data.closePrice
+            binding.volumeDetail.text = data.volume
         }
         count++
     }

@@ -7,26 +7,26 @@
     <fragment
         android:id="@+id/hostFragment"
         android:name="com.bmstu.shatnyuk.androidrk1.HostFragment"
-        android:label="fragment_host"
+        android:label="@string/main_page"
         tools:layout="@layout/fragment_host">
         <action
             android:id="@+id/action_hostFragment_to_settingsActivity"
-            app:destination="@id/settingsFragment"/>
+            app:destination="@id/settingsFragment" />
         <action
             android:id="@+id/action_hostFragment_to_detailsFragment"
-            app:destination="@+id/detailsFragment"/>
+            app:destination="@+id/detailsFragment" />
     </fragment>
     <fragment
         android:id="@+id/settingsFragment"
         android:name="com.bmstu.shatnyuk.androidrk1.MainActivity$SettingsFragment"
-        android:label="fragment_settings" />
+        android:label="@string/settings" />
     <fragment
         android:id="@+id/detailsFragment"
         android:name="com.bmstu.shatnyuk.androidrk1.DetailsFragment"
-        android:label="fragment_details"
+        android:label="@string/details"
         tools:layout="@layout/fragment_details">
         <action
             android:id="@+id/action_detailFragment_to_settingsActivity"
-            app:destination="@id/settingsFragment"/>
+            app:destination="@id/settingsFragment" />
     </fragment>
 </navigation>

@@ -3,46 +3,53 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".DetailsFragment"
     android:orientation="vertical"
-    android:padding="16dp">
+    android:padding="16dp"
+    tools:context=".DetailsFragment">
 
     <TextView
+        style="@style/DetailsHeadline"
         android:id="@+id/details"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/details"
-        android:textSize="16pt"
-        android:layout_marginBottom="16dp"/>
+        android:text="@string/details" />
+
+    <TextView
+        style="@style/DetailsItemLabel"
+        android:text="@string/base_asset" />
 
     <TextView
         android:id="@+id/base_asset_detail"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="12dp"/>
+        style="@style/DetailsItemValue" />
+
+    <TextView
+        style="@style/DetailsItemLabel"
+        android:text="@string/quote_asset" />
 
     <TextView
         android:id="@+id/quote_asset_detail"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="12dp"/>
+        style="@style/DetailsItemValue" />
+
+    <TextView
+        style="@style/DetailsItemLabel"
+        android:text="@string/price" />
 
     <TextView
         android:id="@+id/price_detail"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="12dp"/>
+        style="@style/DetailsItemValue" />
 
     <TextView
-        android:id="@+id/date_detail"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="12dp"/>
+        style="@style/DetailsItemLabel"
+        android:text="@string/volume" />
 
     <TextView
         android:id="@+id/volume_detail"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="12dp"/>
+        style="@style/DetailsItemValue" />
+
+    <TextView
+        style="@style/DetailsItemLabel"
+        android:text="@string/date" />
+
+    <TextView
+        android:id="@+id/date_detail"
+        style="@style/DetailsItemValue" />
 
 </LinearLayout>
